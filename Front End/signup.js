@@ -3,8 +3,8 @@ const baseurl="http://localhost:8000/"
 
 form.addEventListener('submit',add);
 
-function add(e){
-    if(form.checkValidity()){
+async function add(e){
+  try{  if(form.checkValidity()){
 e.preventDefault();
 const email=document.getElementById('email')
 const fullname=document.getElementById('fullname')
@@ -16,12 +16,20 @@ const obj={
     password:password
 }
 
-axios.post(baseurl+"/user/signup",obj)
-.then(()=>{
+const response=await axios.post(baseurl+"/user/signup",obj)
+
+if(response.status===201){
     console.log('Signup done');
-    window.location.href = loginpage;})
-.catch((err)=>{console.log(err);})
+    window.location.href = loginpage;}
+
+    else{
+        throw new Error("Failed to sign-up")
+    }
+
     }else {e.preventDefault();
         form.classList.add('was-validated')
     }
+}catch(err){console.log(err);
+            alert(err)
+            }
 }
