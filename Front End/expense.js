@@ -1,7 +1,12 @@
 const form=document.querySelector('#expense_Form')
+const ul=document.querySelector('#ul');
+
 const baseurl="http://localhost:5000/"
 form.addEventListener('submit',add);
+ul.addEventListener('click',remove);
 showall();
+
+
 
 async function add(e){
     e.preventDefault();
@@ -38,7 +43,42 @@ function show(obj){
     const ul=document.querySelector('#ul')
     const li=document.createElement('li');
     li.id=obj.id;
-   const text=document.createTextNode(str)
-    li.appendChild(text)
+    const amt=document.createElement('input');
+    amt.type='number';
+    amt.value=obj.amount;
+    amt.disabled=true;
+    li.appendChild(document.createTextNode('Amount:'))
+    li.appendChild(amt);
+
+    const desc=document.createElement('input');
+    desc.type='text';
+    desc.value=obj.description;
+    desc.disabled=true;
+    li.appendChild(document.createTextNode('Description:'))
+    li.appendChild(desc);
+
+    const type=document.createElement('input');
+    type.type='text';
+    type.value=obj.type;
+    type.disabled=true;
+    li.appendChild(document.createTextNode('type:'))
+    li.appendChild(type);
+
+    const btn=document.createElement('button');
+    btn.style.borderColor='red';
+        
+    btn.appendChild(document.createTextNode('Delete'));
+    li.appendChild(document.createTextNode(' . . . . .'));
+    li.appendChild(btn)
     ul.appendChild(li)
+}
+
+function remove(e){
+    e.preventDefault();
+    if(e.target.classList.contains('btn-danger')){
+        axios.get(baseurl+'delete/'+e.target.parentElement.id)
+        .then(()=>{  ul.removeChild(e.target.parentElement);})
+        .catch(err=>{console.log(err)})
+      
+    }
 }

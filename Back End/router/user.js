@@ -10,4 +10,6 @@ router.post('/user/login',signup_Controller.login);
 router.get('/expense',signup_Controller.get_All_Expense);
 
 router.post('/expense',signup_Controller.post_Expense);
+
+router.get('/delete/:id',signup_Controller.delete);
 module.exports=router;

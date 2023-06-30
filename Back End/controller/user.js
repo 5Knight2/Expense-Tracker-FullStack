@@ -56,3 +56,16 @@ exports.post_Expense=(req,res,next)=>{
    .then((result)=>{res.json(result.id)}) 
    .catch((err)=>{console.log(err)})
 }
+
+exports.delete=(req,res,next)=>{
+    const id=req.params.id
+    Expense.findByPk(id)
+    .then((object)=>{
+        return object.destroy()
+    })
+    .then(()=> {return res.end()})
+    .catch(err=>{console.log(err)})
+
+    .catch(err=>{console.log(err)})
+
+}
