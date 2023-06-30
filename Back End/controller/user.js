@@ -1,4 +1,5 @@
 const User=require('../model/user')
+const Expense=require('../model/expense')
 const bcrypt=require('bcrypt')
 
 exports.signup=(req,res,next)=>{
@@ -37,4 +38,21 @@ exports.login=(req,res,next)=>{
     })
     .catch(err=>{console.log(err)
     return res.end();})
+}
+
+exports.get_All_Expense=(req,res,next)=>{
+    Expense.findAll()
+    .then(result=>{res.send(result)})
+    .catch(err=>{console.log(err)})
+   
+}
+
+exports.post_Expense=(req,res,next)=>{
+   Expense.create({
+    description:req.body.description,
+    type:req.body.type,
+    amount:req.body.amount
+   })
+   .then((result)=>{res.json(result.id)}) 
+   .catch((err)=>{console.log(err)})
 }

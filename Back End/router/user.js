@@ -7,4 +7,7 @@ router.post('/user/signup',signup_Controller.signup);
 
 router.post('/user/login',signup_Controller.login);
 
+router.get('/expense',signup_Controller.get_All_Expense);
+
+router.post('/expense',signup_Controller.post_Expense);
 module.exports=router;
