@@ -13,8 +13,8 @@ app.use(cors())
 app.use(signup_Router);
 
 sequelize
-.sync({force:true})
-//.sync()
+//.sync({force:true})
+.sync()
 .then((res)=>{
     console.log(res);
     app.listen(5000)})
