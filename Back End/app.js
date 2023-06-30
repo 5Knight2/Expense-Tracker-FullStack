@@ -2,7 +2,7 @@ const express=require('express');
 const bodyparser=require('body-parser');
 const cors=require('cors');
 
-const signup_Router=require('./router/signup');
+const user_route=require('./router/user');
 const sequelize=require('./util/database');
 
 const app=express();
@@ -10,7 +10,7 @@ app.use(bodyparser.json());
 app.use(cors())
 
 
-app.use(signup_Router);
+app.use(user_route);
 
 sequelize
 //.sync({force:true})

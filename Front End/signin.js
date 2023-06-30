@@ -10,7 +10,7 @@ function signin(e){
         password:document.querySelector('#password').value
     }
     axios.post(baseurl+'user/login',obj)
-    .then((msg)=>alert(msg))
+    .then((msg)=>alert(msg.data))
     .catch((err)=>{
-        console.log(err.message);alert(err.message)})
+        console.log(err.response.data);alert(err.response.data)})
 }
