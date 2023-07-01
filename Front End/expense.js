@@ -28,17 +28,19 @@ catch(err){console.log(err)}
 
 }
 
-function showall(){
-    axios.get(baseurl+'expense')
-    .then((result)=>{
+async function showall(){
+    try{
+    const result=await axios.get(baseurl+'expense')
+    
         for(let i=0;i<result.data.length;i++){
             show(result.data[i])
         }
-    })
-    .catch((err)=>{console.log(err)})
+    }
+    catch(err){console.log(err)}
 }
 
 function show(obj){
+
     const str=obj.amount+' - '+obj.description+' - '+obj.type;
     const ul=document.querySelector('#ul')
     const li=document.createElement('li');
@@ -66,6 +68,7 @@ function show(obj){
 
     const btn=document.createElement('button');
     btn.style.borderColor='red';
+    btn.classList.add('delete')
         
     btn.appendChild(document.createTextNode('Delete'));
     li.appendChild(document.createTextNode(' . . . . .'));
@@ -75,7 +78,7 @@ function show(obj){
 
 function remove(e){
     e.preventDefault();
-    if(e.target.classList.contains('btn-danger')){
+    if(e.target.classList.contains('delete')){
         axios.get(baseurl+'delete/'+e.target.parentElement.id)
         .then(()=>{  ul.removeChild(e.target.parentElement);})
         .catch(err=>{console.log(err)})

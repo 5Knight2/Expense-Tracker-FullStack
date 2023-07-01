@@ -19,6 +19,6 @@ sequelize
 //.sync({force:true})
 .sync()
 .then((res)=>{
-    console.log(res);
+    console.log('connected');
     app.listen(5000)})
 .catch((err)=>{console.log(err)})
