@@ -20,7 +20,7 @@ const response=await axios.post(baseurl+"user/signup",obj)
 
 if(response.status===201){
     console.log('Signup done');
-    window.location.href = loginpage;}
+    window.location.href = 'http://127.0.0.1:5500/Front%20End/signin.html';}
 
     else{
         throw new Error("Failed to sign-up")
@@ -30,6 +30,6 @@ if(response.status===201){
         form.classList.add('was-validated')
     }
 }catch(err){console.log(err);
-            alert(err)
+            alert(err.response.data)
             }
 }

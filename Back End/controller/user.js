@@ -1,25 +1,23 @@
 const User=require('../model/user')
 const Expense=require('../model/expense')
 const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 
-exports.signup=(req,res,next)=>{
+exports.signup=async(req,res,next)=>{
     obj=req.body;   
-    
-    bcrypt.hash(obj.password,10,(err,hash)=>{
+  
+    bcrypt.hash(obj.password,10,async(err,hash)=>{
         
-        User.create({name:obj.fullname,email:obj.email,password:hash})
-        .then(()=>{res.status(201).end()}) 
-        .catch((err)=>{console.log(err)
+        try{
+        const result= await User.create({name:obj.fullname,email:obj.email,password:hash})
+        res.status(201).end()}
+        catch(err){console.log(err)
         if(err.name=='SequelizeUniqueConstraintError' && err.fields.email== obj.email){
          res.status(403).send("Email already registered");
  
         }else res.end(err);
- })
-    })
-   
-
-    
-}
+ }
+})}
 
 exports.login=(req,res,next)=>{
     User.findOne({
@@ -30,9 +28,9 @@ exports.login=(req,res,next)=>{
     })
     .then(result=>{
         if(result===null)return res.status(404).send('User not found')
-        bcrypt.compare(req.body.password,result.password,(err,result)=>{
+        bcrypt.compare(req.body.password,result.password,(err,same)=>{
 
-            if(result)  return res.send('User login sucessful')
+            if(same)  return res.send({message:'User login sucessful',token:encrypt(result.id)})
             else  return res.status(401).send('User not authorized')
         })
     })
@@ -40,15 +38,15 @@ exports.login=(req,res,next)=>{
     return res.end();})
 }
 
-exports.get_All_Expense=(req,res,next)=>{
-    Expense.findAll()
-    .then(result=>{res.send(result)})
+exports.get_All_Expenses=(req,res,next)=>{
+    req.user.getExpenses()
+    .then(result=>{return res.send(result)})
     .catch(err=>{console.log(err)})
    
 }
 
 exports.post_Expense=(req,res,next)=>{
-   Expense.create({
+   req.user.createExpense({
     description:req.body.description,
     type:req.body.type,
     amount:req.body.amount
@@ -59,13 +57,18 @@ exports.post_Expense=(req,res,next)=>{
 
 exports.delete=(req,res,next)=>{
     const id=req.params.id
-    Expense.findByPk(id)
+    req.user.getExpenses({where:{id:id}})
     .then((object)=>{
-        return object.destroy()
+        return req.user.removeExpense(object)
     })
     .then(()=> {return res.end()})
     .catch(err=>{console.log(err)})
 
     .catch(err=>{console.log(err)})
 
+}
+
+function encrypt(id){
+    
+    return jwt.sign({userid:id},'secretKey');
 }

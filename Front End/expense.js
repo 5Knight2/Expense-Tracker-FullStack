@@ -16,7 +16,8 @@ async function add(e){
         type:document.querySelector('#type').value
     }
 
-try{    const result=await axios.post(baseurl+'expense',obj)
+try{const token=localStorage.getItem('token');    
+    const result=await axios.post(baseurl+'expense',obj,{headers:{Authorization:token}})
 if(result){
     obj.id=result.data
     show(obj);
@@ -30,7 +31,8 @@ catch(err){console.log(err)}
 
 async function showall(){
     try{
-    const result=await axios.get(baseurl+'expense')
+        const token=localStorage.getItem('token');
+    const result=await axios.get(baseurl+'expense',{headers:{Authorization:token}})
     
         for(let i=0;i<result.data.length;i++){
             show(result.data[i])
@@ -78,8 +80,10 @@ function show(obj){
 
 function remove(e){
     e.preventDefault();
+    
     if(e.target.classList.contains('delete')){
-        axios.get(baseurl+'delete/'+e.target.parentElement.id)
+        const token=localStorage.getItem('token');
+        axios.get(baseurl+'delete/'+e.target.parentElement.id,{headers:{Authorization:token}})
         .then(()=>{  ul.removeChild(e.target.parentElement);})
         .catch(err=>{console.log(err)})
       

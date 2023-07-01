@@ -13,7 +13,8 @@ async function signin(e){
     }
     try{
     const msg=await axios.post(baseurl+'user/login',obj)
-    alert(msg.data)
+    alert(msg.data.message)
+    localStorage.setItem("token", msg.data.token);
         window.location.href = "http://127.0.0.1:5500/Front%20End/expense.html";
     }
     catch(err){
