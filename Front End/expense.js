@@ -1,13 +1,60 @@
 const form=document.querySelector('#expense_Form')
 const ul=document.querySelector('#ul');
-const premium=document.querySelector('#premium_btn');
-
+let premium_btn=document.querySelector('#premium_btn');
+let leaderboard_btn=null;
+const prm=true;
 
 const baseurl="http://localhost:5000/"
 form.addEventListener('submit',add);
 ul.addEventListener('click',remove);
-premium.addEventListener('click',buy);
+premium_btn.addEventListener('click',buy);
+checkuser();
 showall();
+
+function checkuser(){
+    if(prm){
+    ul_navbar=document.querySelector('#ul_navbar');
+    premium_space=document.querySelector('#premium_space');
+    premium_btn.removeEventListener("click", buy);
+    premium_space.removeChild(premium_btn);
+    premium_space.appendChild(document.createTextNode('Premium User'));
+    premium_btn.id='leaderboard';
+    leaderboard_btn=premium_btn;
+   
+    leaderboard_btn.childNodes[0].data='Leaderboard'
+    premium_space.appendChild(leaderboard_btn);
+  
+    leaderboard_btn.addEventListener("click",leaderboard);
+    
+    
+    
+    
+
+}
+    
+   
+
+}
+
+async function leaderboard(e){
+try{
+    const response=await axios.get(baseurl+'premium/showLeaderboard',{headers:{Authorization:localStorage.getItem("token")}})
+    
+    ul2=document.createElement('ul')
+    for(let i=0;i<response.data.length;i++){
+        str=response.data[i].id+ ' - '+response.data[i].total;
+    li=document.createElement('li')
+    li.appendChild(document.createTextNode(str)) 
+    ul.appendChild(li);   
+        
+    }
+    document.body.appendChild(ul2);
+
+
+}
+catch(err){console.log(err)}
+
+}
 
 async function buy(e){
     e.preventDefault();
