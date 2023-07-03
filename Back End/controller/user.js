@@ -15,7 +15,7 @@ exports.signup=async(req,res,next)=>{
         if(err.name=='SequelizeUniqueConstraintError' && err.fields.email== obj.email){
          res.status(403).send("Email already registered");
  
-        }else res.end(err);
+        }else res.json(err);
  }
 })}
 
@@ -38,35 +38,7 @@ exports.login=(req,res,next)=>{
     return res.end();})
 }
 
-exports.get_All_Expenses=(req,res,next)=>{
-    req.user.getExpenses()
-    .then(result=>{return res.send(result)})
-    .catch(err=>{console.log(err)})
-   
-}
 
-exports.post_Expense=(req,res,next)=>{
-   req.user.createExpense({
-    description:req.body.description,
-    type:req.body.type,
-    amount:req.body.amount
-   })
-   .then((result)=>{res.json(result.id)}) 
-   .catch((err)=>{console.log(err)})
-}
-
-exports.delete=(req,res,next)=>{
-    const id=req.params.id
-    req.user.getExpenses({where:{id:id}})
-    .then((object)=>{
-        return req.user.removeExpense(object)
-    })
-    .then(()=> {return res.end()})
-    .catch(err=>{console.log(err)})
-
-    .catch(err=>{console.log(err)})
-
-}
 
 function encrypt(id){
     

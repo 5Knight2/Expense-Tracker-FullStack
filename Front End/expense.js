@@ -1,16 +1,43 @@
 const form=document.querySelector('#expense_Form')
 const ul=document.querySelector('#ul');
+const premium=document.querySelector('#premium_btn');
+
 
 const baseurl="http://localhost:5000/"
 form.addEventListener('submit',add);
 ul.addEventListener('click',remove);
+premium.addEventListener('click',buy);
 showall();
 
+async function buy(e){
+    e.preventDefault();
+    try {
+        const token=localStorage.getItem('token')
+        const result=await axios.get(baseurl+'buy',{headers:{Authorization:token}});
+    var options={
+        'key':result.data.key_id,
+        'order_id':result.data.id,
+        'handler':async function(response){
+            axios.post(baseurl+'changeStatus',{order_id:response.razorpay_order_id,payment_id:response.razorpay_payment_id},{headers:{Authorization:localStorage.getItem('token')}})
+            .then((res)=>{alert(res.data.message)
+        })}
+    }
+    const rzp1=new Razorpay(options);
+    rzp1.open();
+    e.preventDefault();
 
+    rzp1.on('payment.failed',function (response){
+        axios.post(baseurl+'changeStatus',{order_id:options.order_id},{headers:{Authorization:localStorage.getItem('token')}})
+        .then(()=>{alert('payment failed')})
+    })
+
+}catch(err){console.log(err)}
+}
 
 async function add(e){
     e.preventDefault();
     if(form.checkValidity()){
+        const token=localStorage.getItem('token'); 
         let obj={description:document.querySelector('#description').value,
         amount:document.querySelector('#amount').value,
         type:document.querySelector('#type').value

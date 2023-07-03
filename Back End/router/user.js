@@ -8,9 +8,4 @@ router.post('/user/signup',signup_Controller.signup);
 
 router.post('/user/login',signup_Controller.login);
 
-router.get('/expense',authentication_middleware.authenticate,signup_Controller.get_All_Expenses);
-
-router.post('/expense',authentication_middleware.authenticate,signup_Controller.post_Expense);
-
-router.get('/delete/:id',authentication_middleware.authenticate,signup_Controller.delete);
 module.exports=router;

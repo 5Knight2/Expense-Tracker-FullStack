@@ -20,6 +20,11 @@ password:{
 name:{
     type:Sequelize.STRING,
     allowNull:false,
+},
+isPremiumUser:{
+    type:Sequelize.BOOLEAN,
+    allowNull:false,
+    defaultValue:false
 }
 
 })
