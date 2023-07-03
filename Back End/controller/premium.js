@@ -16,7 +16,7 @@ exports.get_All_Expenses=async (req,res,next)=>{
    
         } const array = Array.from(map, ([id, total]) => ({ id, total }));
         array.sort((a, b) => {
-            return a.total - b.total;
+            return b.total - a.total;
         });
         const users=await User.findAll()
         const usermap=new Map();

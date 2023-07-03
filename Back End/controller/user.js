@@ -30,7 +30,7 @@ exports.login=(req,res,next)=>{
         if(result===null)return res.status(404).send('User not found')
         bcrypt.compare(req.body.password,result.password,(err,same)=>{
 
-            if(same)  return res.send({message:'User login sucessful',token:encrypt(result.id)})
+            if(same)  return res.send({message:'User login sucessful',token:encrypt(result.id,result.isPremiumUser)})
             else  return res.status(401).send('User not authorized')
         })
     })
@@ -40,7 +40,7 @@ exports.login=(req,res,next)=>{
 
 
 
-function encrypt(id){
+function encrypt(id,isPremium){
     
-    return jwt.sign({userid:id},'secretKey');
+    return jwt.sign({userid:id,isPremium:isPremium},'secretKey');
 }

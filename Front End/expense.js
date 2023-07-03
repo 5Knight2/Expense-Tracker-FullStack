@@ -12,7 +12,7 @@ checkuser();
 showall();
 
 function checkuser(){
-    if(prm){
+    if(parseJwt(localStorage.getItem('token'))){
     ul_navbar=document.querySelector('#ul_navbar');
     premium_space=document.querySelector('#premium_space');
     premium_btn.removeEventListener("click", buy);
@@ -37,7 +37,9 @@ function checkuser(){
 }
 
 async function leaderboard(e){
+    if(!document.querySelector('#leaderboard_List')){
 try{
+    
     const response=await axios.get(baseurl+'premium/showLeaderboard',{headers:{Authorization:localStorage.getItem("token")}})
     
     ul2=document.createElement('ul')
@@ -45,16 +47,26 @@ try{
         str=response.data[i].id+ ' - '+response.data[i].total;
     li=document.createElement('li')
     li.appendChild(document.createTextNode(str)) 
-    ul.appendChild(li);   
+    ul2.appendChild(li);   
         
     }
-    document.body.appendChild(ul2);
+    const h3=document.createElement('h4');
+    h3.appendChild(document.createTextNode('Leaderboard'))
+    const div=document.createElement('div');
+    div.id='leaderboard_List'
+    div.classList.add('container')
+    div.appendChild(h3);
+
+    
+    div.appendChild(ul2);
+    document.body.appendChild(div);
 
 
 }
 catch(err){console.log(err)}
 
-}
+
+}}
 
 async function buy(e){
     e.preventDefault();
@@ -67,6 +79,8 @@ async function buy(e){
         'handler':async function(response){
             axios.post(baseurl+'changeStatus',{order_id:response.razorpay_order_id,payment_id:response.razorpay_payment_id},{headers:{Authorization:localStorage.getItem('token')}})
             .then((res)=>{alert(res.data.message)
+                localStorage.setItem("token",res.data.token);
+                location.reload();
         })}
     }
     const rzp1=new Razorpay(options);
@@ -162,4 +176,14 @@ function remove(e){
         .catch(err=>{console.log(err)})
       
     }
+}
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload).isPremium;
 }
