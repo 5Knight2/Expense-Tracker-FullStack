@@ -44,7 +44,7 @@ try{
     
     ul2=document.createElement('ul')
     for(let i=0;i<response.data.length;i++){
-        str=response.data[i].id+ ' - '+response.data[i].total;
+        str=response.data[i].user.name+ ' - '+response.data[i].total_cost;
     li=document.createElement('li')
     li.appendChild(document.createTextNode(str)) 
     ul2.appendChild(li);   
