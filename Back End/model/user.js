@@ -25,6 +25,11 @@ isPremiumUser:{
     type:Sequelize.BOOLEAN,
     allowNull:false,
     defaultValue:false
+},
+totalCost:{
+    type:Sequelize.INTEGER,
+    allowNull:false,
+    defaultValue:0
 }
 
 })

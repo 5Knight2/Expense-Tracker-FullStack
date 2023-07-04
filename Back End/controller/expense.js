@@ -16,7 +16,12 @@ exports.post_Expense=(req,res,next)=>{
     type:req.body.type,
     amount:req.body.amount
    })
-   .then((result)=>{res.json(result.id)}) 
+   .then((result)=>{
+    req.user.totalCost=Number(req.user.totalCost)+Number(result.amount)
+    req.user.save()
+    .then((ret)=>{res.json(result.id)})
+    .catch((err)=>{console.log(err)})
+    }) 
    .catch((err)=>{console.log(err)})
 }
 
@@ -24,10 +29,19 @@ exports.delete=(req,res,next)=>{
     const id=req.params.id
     req.user.getExpenses({where:{id:id}})
     .then((object)=>{
-        return req.user.removeExpense(object)
+
+        req.user.totalCost=Number(req.user.totalCost)-Number(object[0].amount);
+        req.user.save().then(()=> {
+            if(object[0]){
+                object[0].destroy()
+                .then(()=> {return res.end()})
+            .catch(err=>{console.log(err)})}
+        })
+        .catch(err=>{console.log(err)})
+
+        
     })
-    .then(()=> {return res.end()})
-    .catch(err=>{console.log(err)})
+    
 
     .catch(err=>{console.log(err)})
 
