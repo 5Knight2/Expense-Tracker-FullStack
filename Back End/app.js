@@ -13,9 +13,11 @@ const sequelize=require('./util/database');
 const Expense=require('./model/expense');
 const User=require('./model/user');
 const Order=require('./model/order');
+const Reset=require('./model/reset');
 
 
 const app=express();
+app.use(bodyparser.urlencoded());
 app.use(bodyparser.json());
 app.use(cors())
 
@@ -32,6 +34,9 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(Reset);
+Reset.belongsTo(User);
 
 sequelize
 //.sync({force:true})
