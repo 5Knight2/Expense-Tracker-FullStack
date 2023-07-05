@@ -2,6 +2,7 @@ const User=require('../model/user')
 const Expense=require('../model/expense')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
+const sequelize=require('../util/database')
 
 exports.get_All_Expenses=(req,res,next)=>{
     req.user.getExpenses()
@@ -10,39 +11,49 @@ exports.get_All_Expenses=(req,res,next)=>{
    
 }
 
-exports.post_Expense=(req,res,next)=>{
-   req.user.createExpense({
-    description:req.body.description,
-    type:req.body.type,
-    amount:req.body.amount
-   })
-   .then((result)=>{
-    req.user.totalCost=Number(req.user.totalCost)+Number(result.amount)
-    req.user.save()
-    .then((ret)=>{res.json(result.id)})
-    .catch((err)=>{console.log(err)})
-    }) 
-   .catch((err)=>{console.log(err)})
-}
+exports.post_Expense = async (req, res, next) => {
+    
+    try {
+        const t=await sequelize.transaction();
 
-exports.delete=(req,res,next)=>{
+        const result = await req.user.createExpense({
+        description: req.body.description,
+        type: req.body.type,
+        amount: req.body.amount
+      },{transaction:t});
+  
+      req.user.totalCost = Number(req.user.totalCost) + Number(result.amount);
+      await req.user.save({transaction:t});
+      await t.commit();
+      return res.json(result.id);
+    } catch (err) {
+      await t.rollback();
+      return res.end();
+      console.log(err);
+    }
+  };
+
+exports.delete=async (req,res,next)=>{
     const id=req.params.id
-    req.user.getExpenses({where:{id:id}})
-    .then((object)=>{
-
+    const t=await sequelize.transaction();
+    try{
+   
+    const object=await req.user.getExpenses({where:{id:id},transaction:t})
+    
         req.user.totalCost=Number(req.user.totalCost)-Number(object[0].amount);
-        req.user.save().then(()=> {
+        await req.user.save()
             if(object[0]){
-                object[0].destroy()
-                .then(()=> {return res.end()})
-            .catch(err=>{console.log(err)})}
-        })
-        .catch(err=>{console.log(err)})
+                await object[0].destroy()
+                await t.commit();
+                return res.end()}
+            }
+        
+    catch(err){await t.rollback()
+            console.log(err)}
 
         
-    })
+    }
     
 
-    .catch(err=>{console.log(err)})
 
-}
+

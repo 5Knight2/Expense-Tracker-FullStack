@@ -11,10 +11,7 @@ exports.get_All_Expenses=async (req,res,next)=>{
             attributes:['name','totalCost'],
             order:[['totalCost','DESC']]
         })
-            
-    
 
-        
         return res.send(result)}
     catch(err){console.log(err)}
    

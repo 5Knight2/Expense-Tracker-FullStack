@@ -2,32 +2,33 @@ const Razorpay=require('razorpay')
 const Order=require('../model/order');
 const User=require('../model/user');
 const jwt=require('jsonwebtoken')
+const sequelize=require('../util/database')
 
 exports.buy=async (req,res,next)=>{
-
+    const t=await sequelize.transaction();
 try{
     const rzp=new Razorpay({
-        key_id:'rzp_test_6y3JZUUz0fZ9zl',
-        key_secret:"MiXBOYhS6PxOL845ofSxN4ze"
+        key_id:'rzp_test_DB7avL7WW0dU3Q',
+        key_secret:"KDcEftuAzqJwys8DxQoD2n5j"
     })
     const amount=2000000;
-    rzp.orders.create({amount,currency:'INR'},(err,order)=>{
+    rzp.orders.create({amount,currency:'INR'},async (err,order)=>{
         if(err){console.log(err)
         throw new Error(JSON.stringify.err)}
         
-        req.user.createOrder({
+        await req.user.createOrder({
             orderId:order.id,
             paymentstatus:'PENDING'
-        })
-        .then(()=>{res.status(201).json({id:order.id,key_id:rzp.key_id})})
-        .catch(err=>{
-            console.log(err)
-            throw new Error(err)
-        })
+        },{transaction:t})
+        await t.commit();
+        res.status(201).json({id:order.id,key_id:rzp.key_id})
+        
     })
 
 }
-catch(err){res.status(403).json({message:'something went wrong',error:err})}
+catch(err){
+    await t.rollback();
+    res.status(403).json({message:'something went wrong',error:err})}
 
 }
 
