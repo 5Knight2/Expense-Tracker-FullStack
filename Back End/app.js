@@ -7,7 +7,7 @@ const user_route=require('./router/user');
 const expense_route=require('./router/expense');
 const order_route=require('./router/order');
 const premium_route=require('./router/premium');
-
+const password_route=require('./router/password');
 
 const sequelize=require('./util/database');
 const Expense=require('./model/expense');
@@ -24,6 +24,7 @@ app.use(user_route);
 app.use(expense_route)
 app.use(order_route);
 app.use(premium_route);
+app.use(password_route);
 
 
 User.hasMany(Expense);

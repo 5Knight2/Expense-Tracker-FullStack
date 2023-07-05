@@ -1,6 +1,6 @@
 const express=require('express');
 const signup_Controller=require('../controller/user')
-const authentication_middleware=require('../middleware/auth')
+
 
 const router=express.Router();
 

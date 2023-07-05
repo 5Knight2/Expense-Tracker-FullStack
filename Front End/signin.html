@@ -25,7 +25,7 @@
 </nav>
 
 
-    <div class="container">
+    <div class="container" id="login_form">
 <form id="form2">
     <label for="email">Email-id</label>
     <input type="email" id="email" name="email" class="form-control"style="max-width: 300px;" required>
@@ -35,9 +35,22 @@
     <button class="btn btn-primary" id="login_btn">Login</button>
 
 </form>
+<h7 ><a href="" id="forgot_password" style="color: crimson;">Forgot a password?</a></h7><br><br>
+
 
 <h7>Not a user? <a href="http://localhost:5000/user/signup">Sign-up</a></h7>
 </div>
+
+<div class="container" id="reset_form" style="display: none;">
+    <form id="form3">
+        <label for="email">Email-id</label>
+        <input type="email" id="email_reset" name="email" class="form-control"style="max-width: 300px;" required>
+        <br>
+        <button class="btn btn-primary" id="submit">submit</button>
+    
+    </form>
+</div>
+
 </nav>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
 <script src="signin.js"></script>
