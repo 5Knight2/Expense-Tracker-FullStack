@@ -23,7 +23,7 @@
 </ul>
         </di v>
 </nav>
-    <div class="container">
+    <div class="container" id="expense_main_div">
     <form id ='expense_Form' novalidate>
         <label for="amount" >Amount:</label>
         <input type="number" name="amount" id="amount" class="form-control" style="max-width: 300px;" required>
@@ -59,6 +59,7 @@
         <label for="date" >Date</label>
         <input class='form-control' name='date' id="date" type="date" style="max-width: 300px;">
        </form>
+       <button class="btn btn-success" id="show">Show</button>
        <br>
        <table class="table table-secondary table-striped">
         <thead>
@@ -70,21 +71,9 @@
             
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>12/23/23</td>
-                <td>description</td>
-                <td>category</td>
-                <td>amount</td>
-            
-            </tr>
-            <tr>
-                <td>12/23/23</td>
-                <td>description</td>
-                <td>category</td>
-                <td>amount</td>
-            
-            </tr>
+        <tbody id="table_data">
+          
+          
         </tbody>
         
        </table><div style="text-align: center;">

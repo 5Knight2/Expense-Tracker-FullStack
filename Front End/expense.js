@@ -51,12 +51,63 @@ function checkuser(){
 }
 
 async function report(e){
+   //hide leaderboard/ main form
     if(document.querySelector('#leaderboard_List'))
         document.body.removeChild(document.querySelector('#leaderboard_List')); 
-
+    if(document.querySelector('#expense_main_div'))
+        document.body.removeChild(document.querySelector('#expense_main_div')); 
+        
+        //show report form
         const report_div=document.querySelector('#report_div')
         report_div.style.display='block'
+        const show_btn=document.querySelector('#show')
+        show_btn.addEventListener('click',show_report_data)
+        
+        //get data via axios
+       }
     
+async function show_report_data(e){
+    e.preventDefault();
+
+    const token=localStorage.getItem('token');
+    const result=await axios.get(baseurl+'expense',{headers:{Authorization:token}})
+    
+    //remove old data in table
+    const table_data=document.querySelector('#table_data')
+    while(table_data.firstChild)table_data.removeChild(table_data.firstChild);
+
+    //show data
+    const filterdate=new Date(document.querySelector('#date').value);
+    for(let i=0;i<result.data.length;i++){
+        let condition=false;
+        const filter=document.querySelector('#filter').value; 
+        const data_date=new Date(result.data[i].createdAt)
+        if(data_date.getFullYear()==filterdate.getFullYear()){
+            condition=true}
+        if(condition &&(filter=='Daily'|| filter=='Monthly') ){
+            if(data_date.getMonth()==filterdate.getMonth())condition=true;
+             else condition=false;}
+        if(condition &&filter=='Daily'){
+            if(data_date.getDate()==filterdate.getDate())
+            condition=true; 
+            else condition=false;}
+        
+        if(condition){
+        const tr=document.createElement('tr')
+        const  td_date=document.createElement('td')
+        td_date.appendChild(document.createTextNode(result.data[i].createdAt));
+        tr.appendChild(td_date);
+        const  td_desc=document.createElement('td')
+        td_desc.appendChild(document.createTextNode(result.data[i].description));
+        tr.appendChild(td_desc);
+        const  td_category=document.createElement('td')
+        td_category.appendChild(document.createTextNode(result.data[i].type));
+        tr.appendChild(td_category);
+        const  td_amount=document.createElement('td')
+        td_amount.appendChild(document.createTextNode(result.data[i].amount));
+        tr.appendChild(td_amount);
+        table_data.appendChild(tr);}
+    }
 }
 async function leaderboard(e){
     if(document.querySelector('#report_div'))
