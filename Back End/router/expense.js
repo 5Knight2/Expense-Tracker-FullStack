@@ -10,4 +10,6 @@ router.post('/expense',authentication_middleware.authenticate,expense_controller
 
 router.get('/delete/:id',authentication_middleware.authenticate,expense_controller.delete);
 
+router.get('/download',authentication_middleware.authenticate,expense_controller.download);
+
 module.exports=router;

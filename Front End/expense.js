@@ -62,10 +62,25 @@ async function report(e){
         report_div.style.display='block'
         const show_btn=document.querySelector('#show')
         show_btn.addEventListener('click',show_report_data)
-        
+        const download_btn=document.querySelector('#download')
+        download_btn.addEventListener('click',download_data)
         //get data via axios
        }
     
+async function download_data(e){
+    e.preventDefault()
+    const token=localStorage.getItem('token');
+    try{const result=await axios.get(baseurl+'download',{headers:{Authorization:token}})
+    console.log(result);
+    location.replace(result.data.file_Url);}
+    catch(err){
+        console.log(err.response.data.err)
+        alert('Something went wrong Please try after some time')}
+
+
+
+
+}
 async function show_report_data(e){
     e.preventDefault();
 

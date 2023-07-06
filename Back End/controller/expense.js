@@ -3,6 +3,25 @@ const Expense=require('../model/expense')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const sequelize=require('../util/database')
+const aws=require('aws-sdk')
+const { UpdateAttribute } = require('sib-api-v3-sdk')
+
+exports.download=async(req,res,next)=>{
+    try{
+        let expense=await req.user.getExpenses()
+        expense=JSON.stringify(expense);
+ 
+        const FILE_NAME='expense_for_'+req.user.email+new Date()+'.txt';
+
+        const URL= await update(expense,FILE_NAME);
+        res.status(200).json({file_Url:URL})
+
+
+    }
+    catch(err){console.log(err)
+    res.status(500).json({err:err})}
+
+}
 
 exports.get_All_Expenses=(req,res,next)=>{
     req.user.getExpenses()
@@ -55,5 +74,34 @@ exports.delete=async (req,res,next)=>{
     }
     
 
+async function update(data,FILE_NAME){
+    const KEY='AKIAXP4MX7CZL6TEZPFT';
+    const SECRET='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';
+    const BUCKET_NAME='expensetracker1221'
 
+    let S3Bucket=new aws.S3({
+        accessKeyId:KEY,
+        secretAccessKey:SECRET,
+        Bucket:BUCKET_NAME
+    })
+
+    var params={
+        Bucket:BUCKET_NAME,
+        Key:FILE_NAME,
+        Body:data,
+        ACL:'public-read'
+    }
+
+    return new Promise((resolve, reject)=>{
+     S3Bucket.upload(params,(err,response)=>{
+        
+        if(err){
+         reject(err)}
+        else{
+             resolve(response.Location);
+        }})
+    })
+    
+
+} 
 
