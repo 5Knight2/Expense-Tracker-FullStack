@@ -14,6 +14,7 @@ const Expense=require('./model/expense');
 const User=require('./model/user');
 const Order=require('./model/order');
 const Reset=require('./model/reset');
+const File_Url=require('./model/file_url');
 
 
 const app=express();
@@ -37,6 +38,9 @@ Order.belongsTo(User);
 
 User.hasMany(Reset);
 Reset.belongsTo(User);
+
+User.hasMany(File_Url);
+File_Url.belongsTo(User);
 
 sequelize
 //.sync({force:true})

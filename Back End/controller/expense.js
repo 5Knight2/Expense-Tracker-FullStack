@@ -1,10 +1,19 @@
 const User=require('../model/user')
 const Expense=require('../model/expense')
+const File_Url=require('../model/file_url')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const sequelize=require('../util/database')
+const Download=require('../services/download')
 const aws=require('aws-sdk')
 const { UpdateAttribute } = require('sib-api-v3-sdk')
+
+exports.download_history=async(req,res,next)=>{
+    try { const history=await Download.download_history(req)
+res.status(200).json(history);
+    }catch(err){console.log(err)
+    res.status(400).end()}
+}
 
 exports.download=async(req,res,next)=>{
     try{
@@ -14,6 +23,9 @@ exports.download=async(req,res,next)=>{
         const FILE_NAME='expense_for_'+req.user.email+new Date()+'.txt';
 
         const URL= await update(expense,FILE_NAME);
+
+        await req.user.createFileurl({url:URL});
+        
         res.status(200).json({file_Url:URL})
 
 

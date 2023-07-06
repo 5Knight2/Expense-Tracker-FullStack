@@ -12,4 +12,6 @@ router.get('/delete/:id',authentication_middleware.authenticate,expense_controll
 
 router.get('/download',authentication_middleware.authenticate,expense_controller.download);
 
+router.get('/download_history',authentication_middleware.authenticate,expense_controller.download_history);
+
 module.exports=router;

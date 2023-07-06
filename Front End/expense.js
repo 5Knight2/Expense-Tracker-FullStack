@@ -2,12 +2,18 @@ const form=document.querySelector('#expense_Form')
 const ul=document.querySelector('#ul');
 let premium_btn=document.querySelector('#premium_btn');
 let leaderboard_btn=null;
+const download_btn=document.querySelector('#download')
+const show_downloads=document.querySelector('#show_downloads')
 const prm=true;
 
 const baseurl="http://localhost:5000/"
+
 form.addEventListener('submit',add);
 ul.addEventListener('click',remove);
 premium_btn.addEventListener('click',buy);
+download_btn.addEventListener('click',download_data)
+
+show_downloads.addEventListener('click',show_download_history)
 checkuser();
 showall();
 
@@ -62,13 +68,49 @@ async function report(e){
         report_div.style.display='block'
         const show_btn=document.querySelector('#show')
         show_btn.addEventListener('click',show_report_data)
-        const download_btn=document.querySelector('#download')
-        download_btn.addEventListener('click',download_data)
+        
         //get data via axios
        }
     
+async function show_download_history(e){
+        e.preventDefault()
+    
+        if(parseJwt(localStorage.getItem('token'))){
+        const token=localStorage.getItem('token');
+        try{
+        const response=await axios.get(baseurl+'download_history',{headers:{Authorization:token}})
+
+        ul2=document.createElement('ul')
+    for(let i=0;i<response.data.length;i++){
+       
+    li=document.createElement('li')
+    const a=document.createElement('a')
+    a.href=response.data[i].url;
+    a.appendChild(document.createTextNode( response.data[i].createdAt));
+   
+    li.appendChild(a) 
+    ul2.appendChild(li);   
+        
+    }
+    const h3=document.createElement('h4');
+    h3.appendChild(document.createTextNode('Download History'))
+    const div=document.createElement('div');
+    div.id='history'
+    div.classList.add('container')
+    div.appendChild(h3);
+    div.appendChild(ul2);
+    document.body.appendChild(div);
+
+        
+    }catch(err){console.log(err)}
+    }
+    else alert('You are not a premium user!!!')
+}
+
 async function download_data(e){
     e.preventDefault()
+
+    if(parseJwt(localStorage.getItem('token'))){
     const token=localStorage.getItem('token');
     try{const result=await axios.get(baseurl+'download',{headers:{Authorization:token}})
     console.log(result);
@@ -76,7 +118,8 @@ async function download_data(e){
     catch(err){
         console.log(err.response.data.err)
         alert('Something went wrong Please try after some time')}
-
+    }
+    else alert('You are not a premium user!!!')
 
 
 
@@ -146,8 +189,6 @@ try{
     div.id='leaderboard_List'
     div.classList.add('container')
     div.appendChild(h3);
-
-    
     div.appendChild(ul2);
     document.body.appendChild(div);
 
