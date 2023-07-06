@@ -4,7 +4,9 @@ let premium_btn=document.querySelector('#premium_btn');
 let leaderboard_btn=null;
 const download_btn=document.querySelector('#download')
 const show_downloads=document.querySelector('#show_downloads')
-const prm=true;
+const next=document.querySelector('#next')
+const prev=document.querySelector('#prev')
+let page=0;
 
 const baseurl="http://localhost:5000/"
 
@@ -12,8 +14,9 @@ form.addEventListener('submit',add);
 ul.addEventListener('click',remove);
 premium_btn.addEventListener('click',buy);
 download_btn.addEventListener('click',download_data)
-
 show_downloads.addEventListener('click',show_download_history)
+next.addEventListener('click',nextpage)
+prev.addEventListener('click',prevpage)
 checkuser();
 showall();
 
@@ -125,10 +128,11 @@ async function download_data(e){
 
 }
 async function show_report_data(e){
+    page=0;
     e.preventDefault();
 
     const token=localStorage.getItem('token');
-    const result=await axios.get(baseurl+'expense',{headers:{Authorization:token}})
+    const result=await axios.get(baseurl+'expense'+'?page='+(page+1),{headers:{Authorization:token}})
     
     //remove old data in table
     const table_data=document.querySelector('#table_data')
@@ -136,10 +140,10 @@ async function show_report_data(e){
 
     //show data
     const filterdate=new Date(document.querySelector('#date').value);
-    for(let i=0;i<result.data.length;i++){
+    for(let i=0;i<result.data.rows.length;i++){
         let condition=false;
         const filter=document.querySelector('#filter').value; 
-        const data_date=new Date(result.data[i].createdAt)
+        const data_date=new Date(result.data.rows[i].createdAt)
         if(data_date.getFullYear()==filterdate.getFullYear()){
             condition=true}
         if(condition &&(filter=='Daily'|| filter=='Monthly') ){
@@ -153,16 +157,16 @@ async function show_report_data(e){
         if(condition){
         const tr=document.createElement('tr')
         const  td_date=document.createElement('td')
-        td_date.appendChild(document.createTextNode(result.data[i].createdAt));
+        td_date.appendChild(document.createTextNode(result.data.rows[i].createdAt));
         tr.appendChild(td_date);
         const  td_desc=document.createElement('td')
-        td_desc.appendChild(document.createTextNode(result.data[i].description));
+        td_desc.appendChild(document.createTextNode(result.data.rows[i].description));
         tr.appendChild(td_desc);
         const  td_category=document.createElement('td')
-        td_category.appendChild(document.createTextNode(result.data[i].type));
+        td_category.appendChild(document.createTextNode(result.data.rows[i].type));
         tr.appendChild(td_category);
         const  td_amount=document.createElement('td')
-        td_amount.appendChild(document.createTextNode(result.data[i].amount));
+        td_amount.appendChild(document.createTextNode(result.data.rows[i].amount));
         tr.appendChild(td_amount);
         table_data.appendChild(tr);}
     }
@@ -250,12 +254,18 @@ catch(err){console.log(err)}
 
 async function showall(){
     try{
+        
         const token=localStorage.getItem('token');
-    const result=await axios.get(baseurl+'expense',{headers:{Authorization:token}})
-    
-        for(let i=0;i<result.data.length;i++){
-            show(result.data[i])
+    const result=await axios.get(baseurl+'expense'+'?page='+(page+1),{headers:{Authorization:token}})
+    page++;
+    const ul=document.querySelector('#ul')
+    while(ul.firstChild)ul.removeChild(ul.firstChild)
+        for(let i=0;i<result.data.rows.length;i++){
+            show(result.data.rows[i])
         }
+        next.disabled=true;prev.disabled=true;
+        if(result.data.count-10*page>0){next.disabled=false;}
+        if(page-1>0){prev.disabled=false;}
     }
     catch(err){console.log(err)}
 }
@@ -307,6 +317,13 @@ function remove(e){
         .catch(err=>{console.log(err)})
       
     }
+}
+function prevpage(){
+    page=page-2;
+    showall()
+}
+function nextpage(){
+    showall()
 }
 
 function parseJwt (token) {

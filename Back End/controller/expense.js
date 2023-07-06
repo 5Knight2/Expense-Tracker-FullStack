@@ -36,7 +36,15 @@ exports.download=async(req,res,next)=>{
 }
 
 exports.get_All_Expenses=(req,res,next)=>{
-    req.user.getExpenses()
+   const offset=(Number (req.query.page)-1)*10
+     Expense.findAndCountAll({
+        where: {
+          userId:req.user.id
+        },
+        offset: offset,
+        limit: 10
+      })
+
     .then(result=>{return res.send(result)})
     .catch(err=>{console.log(err)})
    
