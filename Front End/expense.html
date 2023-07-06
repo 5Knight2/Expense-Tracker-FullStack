@@ -48,6 +48,47 @@
 </ul>
     
 </div>
+<div class="container" id="report_div" style="display: none;">
+    <form class="form-control" id="report_filter" >
+        <label for="filter" >filter:</label>
+        <select class="form-control" style="max-width: 300px;" name="filter" id="filter" required>
+            <option value="Daily" >Daily</option>
+            <option value="Monthly" >Monthly</option>
+            <option value="Yearly" >Yearly</option>
+        </select>
+        <label for="date" >Date</label>
+        <input class='form-control' name='date' id="date" type="date" style="max-width: 300px;">
+       </form>
+       <table class="table table-secondary table-striped">
+        <thead>
+            <tr >
+                <td>Date</td>
+                <td>Description</td>
+                <td>Category</td>
+                <td>Amount</td>
+            
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12/23/23</td>
+                <td>description</td>
+                <td>category</td>
+                <td>amount</td>
+            
+            </tr>
+            <tr>
+                <td>12/23/23</td>
+                <td>description</td>
+                <td>category</td>
+                <td>amount</td>
+            
+            </tr>
+        </tbody>
+        
+       </table>
+</div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
 <script src="expense.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

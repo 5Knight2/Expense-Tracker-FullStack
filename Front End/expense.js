@@ -20,23 +20,47 @@ function checkuser(){
     premium_space.appendChild(document.createTextNode('Premium User'));
     premium_btn.id='leaderboard';
     leaderboard_btn=premium_btn;
+    
+    const div=document.createElement('button');
+    div.classList.add('btn-group');
+    div.style.backgroundColor='transparent';
+    div.style.borderWidth='0px';
+    
+    const report_btn=document.createElement('button');
+    report_btn.classList.add('btn');
+    report_btn.classList.add('nav-link');
+    report_btn.style.backgroundColor='gray';
+
    
+    
+    report_btn.appendChild(document.createTextNode('Reports'))
     leaderboard_btn.childNodes[0].data='Leaderboard'
-    premium_space.appendChild(leaderboard_btn);
-  
-    leaderboard_btn.addEventListener("click",leaderboard);
-    
-    
-    
-    
+   
 
-}
+    div.appendChild(leaderboard_btn);
+    div.appendChild(report_btn);
+    
+    premium_space.appendChild(div);
+    leaderboard_btn.addEventListener("click",leaderboard);
+    report_btn.addEventListener("click",report);
+    
     
    
 
 }
+}
 
+async function report(e){
+    if(document.querySelector('#leaderboard_List'))
+        document.body.removeChild(document.querySelector('#leaderboard_List')); 
+
+        const report_div=document.querySelector('#report_div')
+        report_div.style.display='block'
+    
+}
 async function leaderboard(e){
+    if(document.querySelector('#report_div'))
+    report_div.style.display='none'
     if(!document.querySelector('#leaderboard_List')){
 try{
     
