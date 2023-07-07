@@ -12,7 +12,6 @@ if(localStorage.getItem('rows'))
 rowsperpage.value=localStorage.getItem('rows');
 
 let page=0;
-let reportpage=false;
 
 const baseurl="http://localhost:5000/"
 
@@ -75,8 +74,7 @@ function checkuser(){
 async function report(e){
    //hide leaderboard/ main form
 
-   reportpage=true
-   next.disabled=true;prev.disabled=true;
+
     if(document.querySelector('#leaderboard_List'))
         document.body.removeChild(document.querySelector('#leaderboard_List')); 
     if(document.querySelector('#expense_main_div'))
@@ -144,22 +142,22 @@ async function download_data(e){
 
 }
 async function show_report_data(e){
-    reportpage=true
+   
     e.preventDefault();
     const rows=localStorage.getItem("rows");
     const token=localStorage.getItem('token');
-    const result=await axios.get(baseurl+'expense'+'?page='+(page+1)+'&rows='+rows,{headers:{Authorization:token}})
-    page++;
+    const result=await axios.get(baseurl+'expense',{headers:{Authorization:token}})
+    
     //remove old data in table
     const table_data=document.querySelector('#table_data')
     while(table_data.firstChild)table_data.removeChild(table_data.firstChild);
 
     //show data
     const filterdate=new Date(document.querySelector('#date').value);
-    for(let i=0;i<result.data.rows.length;i++){
+    for(let i=0;i<result.data.length;i++){
         let condition=false;
         const filter=document.querySelector('#filter').value; 
-        const data_date=new Date(result.data.rows[i].createdAt)
+        const data_date=new Date(result.data[i].createdAt)
         if(data_date.getFullYear()==filterdate.getFullYear()){
             condition=true}
         if(condition &&(filter=='Daily'|| filter=='Monthly') ){
@@ -173,22 +171,20 @@ async function show_report_data(e){
         if(condition){
         const tr=document.createElement('tr')
         const  td_date=document.createElement('td')
-        td_date.appendChild(document.createTextNode(result.data.rows[i].createdAt));
+        td_date.appendChild(document.createTextNode(result.data[i].createdAt));
         tr.appendChild(td_date);
         const  td_desc=document.createElement('td')
-        td_desc.appendChild(document.createTextNode(result.data.rows[i].description));
+        td_desc.appendChild(document.createTextNode(result.data[i].description));
         tr.appendChild(td_desc);
         const  td_category=document.createElement('td')
-        td_category.appendChild(document.createTextNode(result.data.rows[i].type));
+        td_category.appendChild(document.createTextNode(result.data[i].type));
         tr.appendChild(td_category);
         const  td_amount=document.createElement('td')
-        td_amount.appendChild(document.createTextNode(result.data.rows[i].amount));
+        td_amount.appendChild(document.createTextNode(result.data[i].amount));
         tr.appendChild(td_amount);
         table_data.appendChild(tr);}
     }
-    next.disabled=true;prev.disabled=true;
-        if(result.data.count-rows*page>0){next.disabled=false;}
-        if(page-1>0){prev.disabled=false;}
+  
 }
 async function leaderboard(e){
     if(document.querySelector('#report_div'))
@@ -340,14 +336,13 @@ function remove(e){
 }
 function prevpage(e){
    
-    page=page-2;
-    if(!reportpage) showall()
-    else show_report_data(e)
+    showall()
+    
 }
 function nextpage(e){
 
-    if(!reportpage) showall()
-    else show_report_data(e)
+    showall()
+   
 }
 
 function parseJwt (token) {

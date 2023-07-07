@@ -51,7 +51,12 @@
 
 </ul>
 
-    
+<div style="text-align: center;">
+    <button class="btn btn-primary btn-sm" disabled id="prev" ><</button>
+    <button class="btn btn-primary btn-sm" disabled id="next" >></button>
+    <input type="number" id="rowsperpage" name="rowsperpage" value="10" style="max-width: 40px;">
+    <label for="rowsperpage">rows/page</label>
+    </div>
 </div>
 
 <div class="container" id="report_div" style="display: none;">
@@ -85,12 +90,7 @@
        </table><div style="text-align: center;">
    
      </div>
-</div><div style="text-align: center;">
-    <button class="btn btn-primary btn-sm" disabled id="prev" ><</button>
-    <button class="btn btn-primary btn-sm" disabled id="next" >></button>
-    <input type="number" id="rowsperpage" name="rowsperpage" value="10" style="max-width: 40px;">
-    <label for="rowsperpage">rows/page</label>
-    </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
 <script src="expense.js"></script>

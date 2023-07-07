@@ -36,6 +36,8 @@ exports.download=async(req,res,next)=>{
 }
 
 exports.get_All_Expenses=(req,res,next)=>{
+  
+    if(req.query.page){
     const limit=Number(req.query.rows);
    const offset=(Number (req.query.page)-1)*limit
   
@@ -48,7 +50,12 @@ exports.get_All_Expenses=(req,res,next)=>{
       })
 
     .then(result=>{return res.send(result)})
-    .catch(err=>{console.log(err)})
+    .catch(err=>{console.log(err)})}
+    else{
+req.user.getExpenses()
+        .then(result=>{return res.send(result)})
+        .catch(err=>{console.log(err)})}
+    
    
 }
 
