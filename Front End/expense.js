@@ -7,6 +7,7 @@ const show_downloads=document.querySelector('#show_downloads')
 const next=document.querySelector('#next')
 const prev=document.querySelector('#prev')
 let page=0;
+let reportpage=false;
 
 const baseurl="http://localhost:5000/"
 
@@ -61,6 +62,9 @@ function checkuser(){
 
 async function report(e){
    //hide leaderboard/ main form
+
+   reportpage=true
+   next.disabled=true;prev.disabled=true;
     if(document.querySelector('#leaderboard_List'))
         document.body.removeChild(document.querySelector('#leaderboard_List')); 
     if(document.querySelector('#expense_main_div'))
@@ -128,12 +132,12 @@ async function download_data(e){
 
 }
 async function show_report_data(e){
-    page=0;
+    reportpage=true
     e.preventDefault();
 
     const token=localStorage.getItem('token');
     const result=await axios.get(baseurl+'expense'+'?page='+(page+1),{headers:{Authorization:token}})
-    
+    page++;
     //remove old data in table
     const table_data=document.querySelector('#table_data')
     while(table_data.firstChild)table_data.removeChild(table_data.firstChild);
@@ -170,6 +174,9 @@ async function show_report_data(e){
         tr.appendChild(td_amount);
         table_data.appendChild(tr);}
     }
+    next.disabled=true;prev.disabled=true;
+        if(result.data.count-10*page>0){next.disabled=false;}
+        if(page-1>0){prev.disabled=false;}
 }
 async function leaderboard(e){
     if(document.querySelector('#report_div'))
@@ -318,12 +325,16 @@ function remove(e){
       
     }
 }
-function prevpage(){
+function prevpage(e){
+   
     page=page-2;
-    showall()
+    if(!reportpage) showall()
+    else show_report_data(e)
 }
-function nextpage(){
-    showall()
+function nextpage(e){
+
+    if(!reportpage) showall()
+    else show_report_data(e)
 }
 
 function parseJwt (token) {
