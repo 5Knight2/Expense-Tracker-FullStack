@@ -27,6 +27,14 @@ rowsperpage.addEventListener('change',change_rowcount)
 checkuser();
 showall();
 
+function logout(){
+
+    localStorage.setItem("token",0)
+    localStorage.setItem("row",10)
+    alert('Log Out')
+    location.replace('http://127.0.0.1:5500/Front%20End/signin.html')
+}
+
 function change_rowcount(e){
     e.preventDefault()
 localStorage.setItem("rows",rowsperpage.value);
@@ -335,7 +343,7 @@ function remove(e){
     }
 }
 function prevpage(e){
-   
+   page=page-2;
     showall()
     
 }
