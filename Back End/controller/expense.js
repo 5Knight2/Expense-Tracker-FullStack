@@ -104,9 +104,9 @@ exports.delete=async (req,res,next)=>{
     
 
 async function update(data,FILE_NAME){
-    const KEY='AKIAXP4MX7CZL6TEZPFT';
-    const SECRET='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';
-    const BUCKET_NAME='expensetracker1221'
+    const KEY=process.env.AWS_KEY;
+    const SECRET=process.env.AWS_SECRET;
+    const BUCKET_NAME=process.env.AWS_BUCKET_NAME;
 
     let S3Bucket=new aws.S3({
         accessKeyId:KEY,

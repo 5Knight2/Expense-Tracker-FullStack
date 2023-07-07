@@ -1,7 +1,11 @@
 const express=require('express');
+const fs=require('fs')
+const path=require('path')
 const bodyparser=require('body-parser');
 const cors=require('cors');
-
+const helmet=require('helmet')
+const compression=require('compression')
+const morgan=require('morgan')
 
 const user_route=require('./router/user');
 const expense_route=require('./router/expense');
@@ -16,8 +20,13 @@ const Order=require('./model/order');
 const Reset=require('./model/reset');
 const File_Url=require('./model/file_url');
 
+console.log(process.env.SQL_PASSWORD)
 
+const logger=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'});
 const app=express();
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined',{stream:logger}));
 app.use(bodyparser.urlencoded());
 app.use(bodyparser.json());
 app.use(cors())
@@ -47,5 +56,6 @@ sequelize
 .sync()
 .then((res)=>{
     console.log('connected');
-    app.listen(5000)})
+    
+    app.listen(process.env.PORT||5000)})
 .catch((err)=>{console.log(err)})

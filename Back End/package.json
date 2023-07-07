@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set SENDINBLUE_API=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&&set RAZORPAY_SECRET=M21mYXgD8h2A24jfYiMXdBiR&&set RAZORPAY_KEY=rzp_test_Q5NJw7aYOSFx1F&&set SQL_PROJECT=expense_tracker&&set SQL_USER=root&&set SQL_PASSWORD=Password@123&&set AWS_KEY=AKIAXP4MX7CZH2JEPCWJ&&set AWS_SECRET=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&&set AWS_BUCKET_NAME=expensetracker1221&&node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,9 +13,12 @@
     "aws-sdk": "^2.1411.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
     "mysql2": "^3.4.3",
     "razorpay": "^2.9.0",
     "sequelize": "^6.32.1",

@@ -7,9 +7,10 @@ const bcrypt=require('bcrypt')
 
 exports.reset_link=async(req,res,next)=>{
     try{
+        const api=process.env.SENDINBLUE_API;
     const defaultClient=Sib.ApiClient.instance;
     const apiKey=defaultClient.authentications['api-key']
-    apiKey.apiKey='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'
+    apiKey.apiKey=process.env.SENDINBLUE_API;
 
     const tranEmailApi=new Sib.TransactionalEmailsApi();
     const sender={email:'pratiktarale100@gmail.com'}
@@ -23,7 +24,7 @@ exports.reset_link=async(req,res,next)=>{
     
     const url='http://localhost:5000/password/resetpassword/'+row.id;
 
-    await tranEmailApi.sendTransacEmail({sender,to:receiver,subject:'demo',textContent:url})
+    await tranEmailApi.sendTransacEmail({sender,to:receiver,subject:'Reset passwords',textContent:url})
     res.json({message:'email sent'});
     console.log('done')
     }

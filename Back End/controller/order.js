@@ -8,8 +8,8 @@ exports.buy=async (req,res,next)=>{
     const t=await sequelize.transaction();
 try{
     const rzp=new Razorpay({
-        key_id:'rzp_test_DB7avL7WW0dU3Q',
-        key_secret:"KDcEftuAzqJwys8DxQoD2n5j"
+        key_id:process.env.RAZORPAY_KEY,
+        key_secret:process.env.RAZORPAY_SECRET
     })
     const amount=2000000;
     rzp.orders.create({amount,currency:'INR'},async (err,order)=>{
