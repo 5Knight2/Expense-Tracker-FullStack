@@ -6,6 +6,11 @@ const download_btn=document.querySelector('#download')
 const show_downloads=document.querySelector('#show_downloads')
 const next=document.querySelector('#next')
 const prev=document.querySelector('#prev')
+const rowsperpage=document.querySelector('#rowsperpage')
+
+if(localStorage.getItem('rows'))
+rowsperpage.value=localStorage.getItem('rows');
+
 let page=0;
 let reportpage=false;
 
@@ -18,8 +23,15 @@ download_btn.addEventListener('click',download_data)
 show_downloads.addEventListener('click',show_download_history)
 next.addEventListener('click',nextpage)
 prev.addEventListener('click',prevpage)
+rowsperpage.addEventListener('change',change_rowcount)
+
 checkuser();
 showall();
+
+function change_rowcount(e){
+    e.preventDefault()
+localStorage.setItem("rows",rowsperpage.value);
+}
 
 function checkuser(){
     if(parseJwt(localStorage.getItem('token'))){
@@ -134,9 +146,9 @@ async function download_data(e){
 async function show_report_data(e){
     reportpage=true
     e.preventDefault();
-
+    const rows=localStorage.getItem("rows");
     const token=localStorage.getItem('token');
-    const result=await axios.get(baseurl+'expense'+'?page='+(page+1),{headers:{Authorization:token}})
+    const result=await axios.get(baseurl+'expense'+'?page='+(page+1)+'&rows='+rows,{headers:{Authorization:token}})
     page++;
     //remove old data in table
     const table_data=document.querySelector('#table_data')
@@ -175,7 +187,7 @@ async function show_report_data(e){
         table_data.appendChild(tr);}
     }
     next.disabled=true;prev.disabled=true;
-        if(result.data.count-10*page>0){next.disabled=false;}
+        if(result.data.count-rows*page>0){next.disabled=false;}
         if(page-1>0){prev.disabled=false;}
 }
 async function leaderboard(e){
@@ -261,9 +273,10 @@ catch(err){console.log(err)}
 
 async function showall(){
     try{
-        
+        let rows=localStorage.getItem("rows");
+if(!rows){rows=10;localStorage.setItem(rows,10)}
         const token=localStorage.getItem('token');
-    const result=await axios.get(baseurl+'expense'+'?page='+(page+1),{headers:{Authorization:token}})
+    const result=await axios.get(baseurl+'expense'+'?page='+(page+1)+'&rows='+rows,{headers:{Authorization:token}})
     page++;
     const ul=document.querySelector('#ul')
     while(ul.firstChild)ul.removeChild(ul.firstChild)
@@ -271,7 +284,7 @@ async function showall(){
             show(result.data.rows[i])
         }
         next.disabled=true;prev.disabled=true;
-        if(result.data.count-10*page>0){next.disabled=false;}
+        if(result.data.count-rows*page>0){next.disabled=false;}
         if(page-1>0){prev.disabled=false;}
     }
     catch(err){console.log(err)}
