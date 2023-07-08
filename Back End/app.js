@@ -6,6 +6,7 @@ const cors=require('cors');
 const helmet=require('helmet')
 const compression=require('compression')
 const morgan=require('morgan')
+const dotenv=require('dotenv').config();
 
 const user_route=require('./router/user');
 const expense_route=require('./router/expense');
@@ -56,6 +57,7 @@ sequelize
 .sync()
 .then((res)=>{
     console.log('connected');
+    console.log(process.env.SQL_PROJECT);
     
     app.listen(process.env.PORT||5000)})
 .catch((err)=>{console.log(err)})
