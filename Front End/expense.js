@@ -8,6 +8,7 @@ const next=document.querySelector('#next')
 const prev=document.querySelector('#prev')
 const rowsperpage=document.querySelector('#rowsperpage')
 
+
 if(localStorage.getItem('rows'))
 rowsperpage.value=localStorage.getItem('rows');
 
@@ -23,6 +24,7 @@ show_downloads.addEventListener('click',show_download_history)
 next.addEventListener('click',nextpage)
 prev.addEventListener('click',prevpage)
 rowsperpage.addEventListener('change',change_rowcount)
+report_btn.addEventListener("click",report);
 
 checkuser();
 showall();
@@ -54,27 +56,11 @@ function checkuser(){
     div.classList.add('btn-group');
     div.style.backgroundColor='transparent';
     div.style.borderWidth='0px';
-    
-    const report_btn=document.createElement('button');
-    report_btn.classList.add('btn');
-    report_btn.classList.add('nav-link');
-    report_btn.style.backgroundColor='gray';
-
-   
-    
-    report_btn.appendChild(document.createTextNode('Reports'))
     leaderboard_btn.childNodes[0].data='Leaderboard'
-   
-
     div.appendChild(leaderboard_btn);
-    div.appendChild(report_btn);
-    
+   
     premium_space.appendChild(div);
     leaderboard_btn.addEventListener("click",leaderboard);
-    report_btn.addEventListener("click",report);
-    
-    
-   
 
 }
 }
